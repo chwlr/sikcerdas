@@ -16,10 +16,10 @@ class PendudukController extends Controller
     {
         $penduduk = Penduduk::find($id);
         $request->validate([
-            // 'nik' => 'required',
-            // 'nomor_rumah' => 'required',
-            // 'nomor_kk' => 'required',
-            // 'nop' => 'required',
+            'nik' => 'required',
+            'nomor_rumah' => 'required',
+            'nomor_kk' => 'required',
+            'nop' => 'required',
             'foto' => 'required|max:2000'
         ]);
 
