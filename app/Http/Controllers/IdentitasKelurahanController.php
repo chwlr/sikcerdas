@@ -19,7 +19,7 @@ class IdentitasKelurahanController extends Controller
 
         if ($count > 0) {
             IdentitasKelurahan::find(1)->update($request->all());
-            return response()->json(['data' => IdentitasKelurahan::first()], 403);
+            return response()->json(['data' => IdentitasKelurahan::first()], Response::HTTP_CREATED);
         }
 
         $request->validate([

@@ -3,7 +3,6 @@
 namespace App\Http\Controllers;
 
 use App\Penduduk;
-use Symfony\Component\HttpFoundation\Response;
 use Illuminate\Http\Request;
 
 class PendudukController extends Controller
@@ -13,18 +12,27 @@ class PendudukController extends Controller
         return response()->json(Penduduk::all());
     }
 
-    public function store(Request $request)
+    public function update(Request $request, $id)
     {
+        $penduduk = Penduduk::find($id);
         $request->validate([
-            'nik' => 'required|unique:formsurveys',
-            'nomor_rumah' => 'required|unique:formsurveys',
-            'nomor_kk' => 'required|unique:formsurveys',
-            'nop' => 'required|unique:formsurveys',
-
+            // 'nik' => 'required',
+            // 'nomor_rumah' => 'required',
+            // 'nomor_kk' => 'required',
+            // 'nop' => 'required',
+            'foto' => 'required|max:2000'
         ]);
 
-        $data = Penduduk::make($request->all());
-        $data->save();
-        return response($data, Response::HTTP_CREATED);
+        if ($request->hasFile('foto')) {
+            $file = $request->file('foto');
+            $extension = $file->getClientOriginalExtension();
+            $fileName = time() . '.' . $extension;
+            $file->move('uploads/images/', $fileName);
+            $penduduk->foto = $fileName;
+        }
+
+        $penduduk->update($request->all());
+
+        return $penduduk;
     }
 }
