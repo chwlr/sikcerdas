@@ -12,6 +12,13 @@ class PendudukController extends Controller
         return response()->json(Penduduk::all());
     }
 
+    public function store(Request $request)
+    {
+        $data = Penduduk::make($request->all());
+        $data->save();
+        return response()->json($data, 201);
+    }
+
     public function update(Request $request, $id)
     {
         $penduduk = Penduduk::find($id);
@@ -33,6 +40,6 @@ class PendudukController extends Controller
 
         $penduduk->update($request->all());
 
-        return $penduduk;
+        return response()->json($penduduk, 200);
     }
 }
