@@ -11,6 +11,12 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 
 class AuthController extends Controller
 {
+
+    // public function dblain()
+    // {
+    //     Model::on('Mysql2')->
+    // }
+
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');

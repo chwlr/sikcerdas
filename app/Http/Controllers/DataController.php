@@ -14,10 +14,20 @@ class DataController extends Controller
         return $data;
     }
 
-    public function searchPenduduk(Request $request)
+    public function searchPendudukNama(Request $request)
     {
         $data = Penduduk::query()
             ->where('nama', 'LIKE', "%{$request->nama}%")
+            ->get();
+
+        return response()->json($data);
+    }
+
+    public function searchPendudukRumah(Request $request)
+    {
+        $data = Penduduk::query()
+            ->where('kode_lingkungan', '=', $request->kode_lingkungan)
+            ->where('nomor_rumah', '=', $request->nomor_rumah)
             ->get();
 
         return response()->json($data);

@@ -30,11 +30,13 @@ Route::get('data', 'DataController@bgKarame');
 
 
 Route::prefix('profil-kelurahan')->group(function () {
-    Route::apiResource('/identitas-kelurahan', 'IdentitasKelurahanController')->middleware('jwt.verify');
+    Route::apiResource('/identitas-kelurahan', 'IdentitasKelurahanController', ['only' => ['index', 'store']])->middleware('jwt.verify');
+    Route::apiResource('/informasi-administrasi', 'InformasiAdministrasiController', ['only' => ['index', 'store']])->middleware('jwt.verify');
 });
 
 
 Route::prefix('kependudukan')->group(function () {
-    Route::apiResource('/penduduk', 'PendudukController')->middleware('jwt.verify');
-    Route::post('search-penduduk', 'DataController@searchPenduduk');
+    Route::apiResource('/penduduk', 'PendudukController', ['only' => ['index', 'store', 'update']])->middleware('jwt.verify');
+    Route::post('search-penduduk-nama', 'DataController@searchPendudukNama');
+    Route::post('search-penduduk-rumah', 'DataController@searchPendudukRumah');
 });
