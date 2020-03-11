@@ -18,10 +18,23 @@ use Illuminate\Support\Facades\Route;
 //     return $request->user();
 // });
 
+
 Route::post('login', ['as' => 'login', 'uses' => 'AuthController@login']);
 Route::post('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
 Route::post('register', 'AuthController@register');
 Route::get('user', 'AuthController@getAuthenticatedUser')->middleware('jwt.verify');
 
-Route::apiResource('/identitas-kelurahan', 'IdentitasKelurahanController')->middleware('jwt.verify');
-Route::apiResource('/penduduk', 'PendudukController')->middleware('jwt.verify');
+
+Route::get('data', 'DataController@bgKarame');
+
+
+
+Route::prefix('profil-kelurahan')->group(function () {
+    Route::apiResource('/identitas-kelurahan', 'IdentitasKelurahanController')->middleware('jwt.verify');
+});
+
+
+Route::prefix('kependudukan')->group(function () {
+    Route::apiResource('/penduduk', 'PendudukController')->middleware('jwt.verify');
+    Route::post('search-penduduk', 'DataController@searchPenduduk');
+});
