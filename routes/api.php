@@ -26,6 +26,7 @@ Route::get('user', 'AuthController@getAuthenticatedUser')->middleware('jwt.verif
 
 
 Route::get('data', 'DataController@bgKarame');
+Route::post('data', 'DataController@bgKarameUpdate');
 
 
 
@@ -39,4 +40,8 @@ Route::prefix('kependudukan')->group(function () {
     Route::apiResource('/penduduk', 'PendudukController', ['only' => ['index', 'store', 'update']])->middleware('jwt.verify');
     Route::post('search-penduduk-nama', 'DataController@searchPendudukNama');
     Route::post('search-penduduk-rumah', 'DataController@searchPendudukRumah');
+});
+
+Route::prefix('bangunan')->group(function () {
+    Route::apiResource('/karame', 'BangunanKarameController', ['only' => ['update', 'show']]);
 });
