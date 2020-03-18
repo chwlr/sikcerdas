@@ -12,11 +12,6 @@ use Tymon\JWTAuth\Exceptions\JWTException;
 class AuthController extends Controller
 {
 
-    // public function dblain()
-    // {
-    //     Model::on('Mysql2')->
-    // }
-
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');
@@ -35,27 +30,22 @@ class AuthController extends Controller
     public function register(Request $request)
     {
         $validator = Validator::make($request->all(), [
-            'nama' => 'required',
+            'nama' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required',
-            'jabatan' => 'required',
-            'status' => 'required'
+            // 'jabatan' => 'required|string|max:255',
+            // 'status' => 'required|string|max:255',
         ]);
 
         if ($validator->fails()) {
             return response()->json($validator->errors()->toJson(), 400);
         }
 
-        // $user = User::create([
-        //     'nama' => $request->get('nama'),
-        //     'email' => $request->get('email'),
-        //     'password' => Hash::make($request->get('password')),
-        //     'jabatan' => $request->get('jabatan'),
-        //     'status' => $request->get('status')
-        // ]);
-
-        $user = User::make($request->all());
-        $user->save();
+        $user = User::create([
+            'nama' => $request->get('nama'),
+            'email' => $request->get('email'),
+            'password' => Hash::make($request->get('password')),
+        ]);
 
         $token = JWTAuth::fromUser($user);
 

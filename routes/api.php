@@ -20,12 +20,13 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::post('login', ['as' => 'login', 'uses' => 'AuthController@login']);
-Route::post('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
+Route::get('logout', ['as' => 'logout', 'uses' => 'AuthController@logout']);
 Route::post('register', 'AuthController@register');
 Route::get('user', 'AuthController@getAuthenticatedUser')->middleware('jwt.verify');
 
 
 Route::get('data', 'DataController@bgKarame');
+Route::post('data', 'DataController@bgKarameUpdate');
 
 
 
@@ -36,7 +37,19 @@ Route::prefix('profil-kelurahan')->group(function () {
 
 
 Route::prefix('kependudukan')->group(function () {
-    Route::apiResource('/penduduk', 'PendudukController', ['only' => ['index', 'store', 'update']])->middleware('jwt.verify');
-    Route::post('search-penduduk-nama', 'DataController@searchPendudukNama');
-    Route::post('search-penduduk-rumah', 'DataController@searchPendudukRumah');
+    Route::apiResource('/pemilik', 'PemilikController', ['only' => ['store', 'update']])->middleware('jwt.verify');
+    Route::get('/pemilik-penduduk/{nop}', ['as' => 'pemilik-penduduk.index', 'uses' => 'PemilikController@dataPendudukPemilik'])->middleware('jwt.verify');
+
+
+    Route::post('/penduduk/{nop}', ['as' => 'penduduk.store', 'uses' => 'PendudukController@storePenduduk'])->middleware('jwt.verify');
+    Route::put('/penduduk/{id}', ['as' => 'penduduk.update', 'uses' => 'PendudukController@updatePenduduk'])->middleware('jwt.verify');
+    // SEARCH ROUTE
+    // Route::post('search-penduduk-nama', 'DataController@searchPendudukNama');
+    // Route::post('search-penduduk-rumah', 'DataController@searchPendudukRumah');
+});
+
+
+Route::prefix('pkk')->group(function () {
+    Route::apiResource('/buku-kegiatan', 'BukuKegiatanController')->middleware('jwt.verify');
+    Route::apiResource('/anggota-pkk', 'AnggotaPkkController')->middleware('jwt.verify');
 });
