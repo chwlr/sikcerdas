@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\AnggotaPkk;
+use App\Model\Pkk\AnggotaPkk;
 use Illuminate\Http\Request;
 
 class AnggotaPkkController extends Controller

@@ -52,4 +52,13 @@ Route::prefix('kependudukan')->group(function () {
 Route::prefix('pkk')->group(function () {
     Route::apiResource('/buku-kegiatan', 'BukuKegiatanController')->middleware('jwt.verify');
     Route::apiResource('/anggota-pkk', 'AnggotaPkkController')->middleware('jwt.verify');
+    Route::apiResource('/anggota-kader', 'AnggotaKaderController')->middleware('jwt.verify');
+    Route::apiResource('/catatan-keluarga', 'CatatanKeluargaController')->middleware('jwt.verify');
+    Route::group(['prefix' => 'catatan-keluarga'], function () {
+        Route::apiResource('/{catatanKeluarga}/catatanKelAnggota', 'CatatanKelAnggotaController', ['only' => ['store', 'update', 'index']])->middleware('jwt.verify');
+    });
+    Route::apiResource('/data-keluarga', 'DataKeluargaController', ['only' => ['store', 'update', 'show', 'index', 'destroy']])->middleware('jwt.verify');
+    Route::group(['prefix' => 'data-keluarga'], function () {
+        Route::apiResource('/{dataKeluarga}/daftarAkeluarga', 'DaftarAkeluargaController', ['only' => ['store', 'update', 'index']])->middleware('jwt.verify');
+    });
 });

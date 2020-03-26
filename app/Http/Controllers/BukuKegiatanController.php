@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\BukuKegiatan;
+use App\Model\Pkk\BukuKegiatan;
 use Illuminate\Http\Request;
 
 class BukuKegiatanController extends Controller
@@ -34,5 +34,11 @@ class BukuKegiatanController extends Controller
         $BukuKegiatan->update($request->all());
 
         return response()->json($BukuKegiatan, 200);
+    }
+
+    public function destroy(BukuKegiatan $buku_kegiatan)
+    {
+        $buku_kegiatan->delete();
+        return response()->json(['message' => 'Record deleted']);
     }
 }
