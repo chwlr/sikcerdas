@@ -57,8 +57,24 @@ Route::prefix('pkk')->group(function () {
     Route::group(['prefix' => 'catatan-keluarga'], function () {
         Route::apiResource('/{catatanKeluarga}/catatanKelAnggota', 'CatatanKelAnggotaController', ['only' => ['store', 'update', 'index']])->middleware('jwt.verify');
     });
+
     Route::apiResource('/data-keluarga', 'DataKeluargaController', ['only' => ['store', 'update', 'show', 'index', 'destroy']])->middleware('jwt.verify');
     Route::group(['prefix' => 'data-keluarga'], function () {
         Route::apiResource('/{dataKeluarga}/daftarAkeluarga', 'DaftarAkeluargaController', ['only' => ['store', 'update', 'index']])->middleware('jwt.verify');
+    });
+
+    Route::apiResource('/pelatihan-kader', 'PelatihanKaderController')->middleware('jwt.verify');
+    Route::group(['prefix' => 'pelatihan-kader'], function () {
+        Route::apiResource('/{pelatihanKader}/daftarPelatihan', 'DaftarPelatihanController', ['only' => ['store', 'update', 'index']])->middleware('jwt.verify');
+    });
+
+    Route::apiResource('/taman-bacaan', 'TamanBacaanController')->middleware('jwt.verify');
+    Route::group(['prefix' => 'taman-bacaan'], function () {
+        Route::apiResource('/{tamanBacaan}/jenisBuku', 'JenisBukuController', ['only' => ['store', 'update', 'index']])->middleware('jwt.verify');
+    });
+
+    Route::apiResource('/posyandu', 'PosyanduController')->middleware('jwt.verify');
+    Route::group(['prefix' => 'posyandu'], function () {
+        Route::apiResource('/{posyandu}/kegiatan-posyandu', 'KegiatanPosyanduController', ['only' => ['store', 'update', 'index']])->middleware('jwt.verify');
     });
 });
