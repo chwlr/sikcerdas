@@ -4,7 +4,7 @@ namespace App\Http\Resources;
 
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TamanBacaanResource extends JsonResource
+class WarungPkkResource extends JsonResource
 {
     /**
      * Transform the resource into an array.
@@ -18,11 +18,12 @@ class TamanBacaanResource extends JsonResource
             'id' => $this->id,
             'provinsi' => $this->provinsi,
             'kabupaten_kota' => $this->kab_kota,
-            'nama_taman_bacaan' => $this->nama_taman_bacaan,
+            'kecamatan' => $this->kecamatan,
+            'kelurahan' => $this->kelurahan,
+            'nama_warung' => $this->nama_warung,
             'nama_pengelola' => $this->nama_pengelola,
-            'jumlah_buku' => $this->jumlah_buku,
             'href' => [
-                'jenis_buku' => route('jenisBuku.index', $this->id)
+                'komoditi_warung' => route('komoditi-warung.index', $this->id)
             ]
         ];
     }

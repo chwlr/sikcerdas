@@ -2,20 +2,29 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PemilikResource;
 use App\Pemilik;
 use Illuminate\Http\Request;
 
 class PemilikController extends Controller
 {
 
-    public function dataPendudukPemilik($nop)
+    public function index()
     {
-        $a = Pemilik::where('nop', $nop)->first();
-        if (!$a) {
-            return response()->json('nop tidak ditemukan');
-        }
-        $data = Pemilik::find($a->id)->penduduk;
-        return response()->json(['pemilik' => $a, 'penghuni' => $data]);
+        // $a = Pemilik::where('nop', $nop)->first();
+        // if (!$a) {
+        //     return response()->json('nop tidak ditemukan');
+        // }
+        // $data = Pemilik::find($a->id)->penduduk;
+        // return response()->json(['pemilik' => $a, 'penghuni' => $data]);
+
+        return PemilikResource::collection(Pemilik::paginate(5));
+    }
+
+    public function show($pemilik)
+    {
+        $data = Pemilik::where('nop', $pemilik)->first();
+        return new PemilikResource($data);
     }
 
 
@@ -30,14 +39,20 @@ class PemilikController extends Controller
 
     public function store(Request $request)
     {
+        $request->validate([
+            'nik' => 'required',
+            'nomor_rumah' => 'required',
+            'nomor_kk' => 'required',
+            'nop' => 'required',
+            'foto' => 'required|max:2000'
+        ]);
         $data = Pemilik::make($request->all());
         $data->save();
-        return response()->json($data, 201);
+        return response()->json(['data' => new PemilikResource($data)], 201);
     }
 
-    public function update(Request $request, $id)
+    public function update(Request $request, Pemilik $pemilik)
     {
-        $pemilik = Pemilik::find($id);
         $request->validate([
             'nik' => 'required',
             'nomor_rumah' => 'required',
@@ -56,6 +71,6 @@ class PemilikController extends Controller
 
         $pemilik->update($request->all());
 
-        return response()->json($pemilik, 200);
+        return response()->json(['data' => new PemilikResource($pemilik)], 200);
     }
 }

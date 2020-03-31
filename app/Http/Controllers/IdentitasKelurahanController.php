@@ -14,10 +14,6 @@ class IdentitasKelurahanController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'kode_kelurahan' => 'required|unique:IdentitasKelurahan'
-        ]);
-
         $count = IdentitasKelurahan::count();
 
         if ($count > 0) {
