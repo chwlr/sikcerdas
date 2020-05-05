@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Pkk\KegiatanPosyandu;
 use App\Model\Pkk\Posyandu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class KegiatanPosyanduController extends Controller
 {
@@ -32,8 +33,21 @@ class KegiatanPosyanduController extends Controller
 
     public function update(Request $request, Posyandu $posyandu, KegiatanPosyandu $kegiatan_posyandu)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $data = $posyandu->kegiatanPosyandu->find($kegiatan_posyandu);
         $data->update($request->all());
         return response()->json(['data' => $data], 200);
+    }
+
+    public function destroy(Posyandu $posyandu, KegiatanPosyandu $kegiatan_posyandu)
+    {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+        $data = $posyandu->kegiatanPosyandu->find($kegiatan_posyandu);
+        $data->delete();
+        return response()->json(['message' => 'Record deleted']);
     }
 }

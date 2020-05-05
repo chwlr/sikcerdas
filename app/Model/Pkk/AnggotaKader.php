@@ -8,5 +8,5 @@ class AnggotaKader extends Model
 {
     protected $connection = 'mysql_pkk';
     protected $table = 'anggota_kader';
-    protected $fillable = ['nomor_registrasi', 'jenis_kelamin', 'status_kedudukan', 'tanggal_lahir', 'umur', 'alamat', 'pendidikan', 'pekerjaan', 'keterangan'];
+    protected $fillable = ['nomor_registrasi', 'nama', 'jabatan', 'jenis_kelamin', 'status_kedudukan', 'tanggal_lahir', 'umur', 'alamat', 'pendidikan', 'pekerjaan', 'keterangan'];
 }

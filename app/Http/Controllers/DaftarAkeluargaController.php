@@ -38,4 +38,11 @@ class DaftarAkeluargaController extends Controller
         $data->update($request->all());
         return response()->json(['data' => $data]);
     }
+
+    public function destroy(DataKeluarga $dataKeluarga, DaftarAkeluarga $daftarAkeluarga)
+    {
+        $data = $dataKeluarga->daftarAkeluarga->find($daftarAkeluarga);
+        $data->delete();
+        return response()->json(['message' => 'Record deleted']);
+    }
 }

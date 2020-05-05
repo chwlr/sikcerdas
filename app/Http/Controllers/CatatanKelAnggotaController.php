@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Pkk\CatatanKelAnggota;
 use App\Model\Pkk\CatatanKeluarga;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class CatatanKelAnggotaController extends Controller
 {
@@ -15,6 +16,9 @@ class CatatanKelAnggotaController extends Controller
 
     public function store(Request $request, CatatanKeluarga $catatanKeluarga)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $request->validate([
             'nama_anggota_keluarga' => 'required|unique:mysql_pkk.catatan_kel_anggota',
             'status_perkawinan' => 'required',
@@ -43,8 +47,21 @@ class CatatanKelAnggotaController extends Controller
 
     public function update(Request $request, CatatanKeluarga $catatanKeluarga, CatatanKelAnggota $catatanKelAnggotum)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $data = $catatanKeluarga->catatanKelAnggota->find($catatanKelAnggotum);
         $data->update($request->all());
         return response()->json(['data' => $data]);
+    }
+
+    public function destroy(CatatanKeluarga $catatanKeluarga, CatatanKelAnggota $catatanKelAnggotum)
+    {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+        $data = $catatanKeluarga->catatanKelAnggota->find($catatanKelAnggotum);
+        $data->delete();
+        return response()->json(['message' => 'Record deleted']);
     }
 }

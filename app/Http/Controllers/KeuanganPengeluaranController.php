@@ -2,15 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Model\Pkk\IndustriRT;
+use App\Model\Pkk\KeuanganPengeluaran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class IndustriRTController extends Controller
+class KeuanganPengeluaranController extends Controller
 {
     public function index()
     {
-        return response()->json(IndustriRT::all());
+        return response()->json(KeuanganPengeluaran::all());
     }
 
     public function store(Request $request)
@@ -20,12 +20,14 @@ class IndustriRTController extends Controller
         }
 
         $request->validate([
-            'kategori' => 'required',
-            'komoditi' => 'required|unique:mysql_pkk.industri_rumah_tangga',
-            'volume' => 'required',
+            'tanggal' => 'required',
+            'sumber_dana' => 'required',
+            'uraian' => 'required',
+            'nomor_bukti_kas' => 'required',
+            'jumlah_pengeluaran' => 'required'
         ]);
 
-        $data = IndustriRT::make($request->all());
+        $data = KeuanganPengeluaran::make($request->all());
         $data->save();
 
         return response()->json($data);
@@ -37,18 +39,18 @@ class IndustriRTController extends Controller
             return response()->json('Access Denied', 500);
         }
 
-        $data = IndustriRT::find($id);
+        $data = KeuanganPengeluaran::find($id);
         $data->update($request->all());
 
         return response()->json($data, 200);
     }
 
-    public function destroy(IndustriRT $industri_rt)
+    public function destroy(KeuanganPengeluaran $pengeluaran)
     {
         if (!Gate::denies('staff')) {
             return response()->json('Access Denied', 500);
         }
-        $industri_rt->delete();
+        $pengeluaran->delete();
         return response()->json(['message' => 'Record deleted']);
     }
 }

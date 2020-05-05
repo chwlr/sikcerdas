@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Pkk\KomoditiWarung;
 use App\Model\Pkk\WarungPkk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class KomoditiWarungController extends Controller
 {
@@ -15,6 +16,10 @@ class KomoditiWarungController extends Controller
 
     public function store(Request $request, WarungPkk $warung_pkk)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+
         $request->validate([
             'jenis_kegiatan' => 'required|unique:mysql_pkk.kegiatan_posyandu',
             'frekwensi_layanan' => 'required',
@@ -32,8 +37,23 @@ class KomoditiWarungController extends Controller
 
     public function update(Request $request, WarungPkk $warung_pkk, KomoditiWarung $komoditi_warung)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+
         $data = $warung_pkk->komoditiWarung->find($komoditi_warung);
         $data->update($request->all());
         return response()->json(['data' => $data], 200);
+    }
+
+    public function destroy(WarungPkk $warung_pkk, KomoditiWarung $komoditi_warung)
+    {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+
+        $data = $warung_pkk->komoditiWarung->find($komoditi_warung);
+        $data->delete();
+        return response()->json(['message' => 'Record deleted']);
     }
 }

@@ -5,7 +5,7 @@ namespace App\Http\Controllers;
 use App\Model\Pkk\DataKeluarga;
 use Illuminate\Http\Request;
 use App\Http\Resources\DataKeluargaResource;
-
+use Illuminate\Support\Facades\Gate;
 
 class DataKeluargaController extends Controller
 {
@@ -19,6 +19,9 @@ class DataKeluargaController extends Controller
     }
     public function store(Request $request)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $request->validate([
             'dasa_wisma' => 'required',
             'provinsi' => 'required',
@@ -37,12 +40,18 @@ class DataKeluargaController extends Controller
 
     public function update(Request $request, DataKeluarga $dataKeluarga)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $dataKeluarga->update($request->all());
         return response()->json(['data' => new DataKeluargaResource($dataKeluarga)], 200);
     }
 
     public function destroy(DataKeluarga $dataKeluarga)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $dataKeluarga->delete();
         return response()->json(['message' => 'Record deleted']);
     }

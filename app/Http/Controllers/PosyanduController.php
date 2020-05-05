@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PosyanduResource;
 use App\Model\Pkk\Posyandu;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PosyanduController extends Controller
 {
@@ -20,6 +21,9 @@ class PosyanduController extends Controller
 
     public function store(Request $request)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $request->validate([
             'provinsi' => 'required',
             'kab_kota' => 'required',
@@ -39,12 +43,18 @@ class PosyanduController extends Controller
 
     public function update(Request $request, Posyandu $posyandu)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $posyandu->update($request->all());
         return response()->json(['data' => new PosyanduResource($posyandu)], 200);
     }
 
     public function destroy(Posyandu $posyandu)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $posyandu->delete();
         return response()->json(['message' => 'Record deleted']);
     }

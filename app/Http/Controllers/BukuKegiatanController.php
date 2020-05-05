@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Pkk\BukuKegiatan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class BukuKegiatanController extends Controller
 {
@@ -14,6 +15,10 @@ class BukuKegiatanController extends Controller
 
     public function store(Request $request)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+
         $request->validate([
             'nama' => 'required',
             'jabatan' => 'required',
@@ -30,6 +35,10 @@ class BukuKegiatanController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+
         $BukuKegiatan = BukuKegiatan::find($id);
         $BukuKegiatan->update($request->all());
 
@@ -38,6 +47,9 @@ class BukuKegiatanController extends Controller
 
     public function destroy(BukuKegiatan $buku_kegiatan)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $buku_kegiatan->delete();
         return response()->json(['message' => 'Record deleted']);
     }

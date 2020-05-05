@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\PelatihanKaderResource;
 use App\Model\Pkk\PelatihanKader;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class PelatihanKaderController extends Controller
 {
@@ -20,6 +21,9 @@ class PelatihanKaderController extends Controller
 
     public function store(Request $request)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $request->validate([
             'provinsi' => 'required',
             'kab_kota' => 'required',
@@ -39,12 +43,18 @@ class PelatihanKaderController extends Controller
 
     public function update(Request $request, PelatihanKader $pelatihanKader)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $pelatihanKader->update($request->all());
         return response()->json(['data' => new PelatihanKaderResource($pelatihanKader)], 200);
     }
 
     public function destroy(PelatihanKader $pelatihanKader)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $pelatihanKader->delete();
         return response()->json(['message' => 'Record deleted']);
     }

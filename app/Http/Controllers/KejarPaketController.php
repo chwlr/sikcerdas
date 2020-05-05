@@ -2,21 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Resources\WarungPkkResource;
-use App\Model\Pkk\WarungPkk;
+use App\Model\Pkk\KejarPaket;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Gate;
 
-class WarungPkkController extends Controller
+class KejarPaketController extends Controller
 {
     public function index()
     {
-        return WarungPkkResource::collection(WarungPkk::all());
-    }
-
-    public function show(WarungPkk $warung_pkk)
-    {
-        return new WarungPkkResource($warung_pkk);
+        return response()->json(KejarPaket::all());
     }
 
     public function store(Request $request)
@@ -29,31 +23,36 @@ class WarungPkkController extends Controller
             'kab_kota' => 'required',
             'kecamatan' => 'required',
             'kelurahan' => 'required',
-            'nama_warung' => 'required|unique:mysql_pkk.posyandu',
-            'nama_pengelola' => 'required'
+            'nama_kejar_paket' => 'required',
+            'jenis_paket' => 'required',
+            'total_pria' => 'required',
+            'total_wanita' => 'required',
+            'jumlah_pengajar' => 'required',
         ]);
 
-        $data = WarungPkk::make($request->all());
+        $data = KejarPaket::make($request->all());
         $data->save();
 
-        return response()->json(['data' => new WarungPkkResource($data)]);
+        return response()->json($data);
     }
 
-    public function update(Request $request, WarungPkk $warung_pkk)
+    public function update(Request $request, $id)
     {
         if (!Gate::denies('staff')) {
             return response()->json('Access Denied', 500);
         }
-        $warung_pkk->update($request->all());
-        return response()->json(['data' => new WarungPkkResource($warung_pkk)], 200);
+        $data = KejarPaket::find($id);
+        $data->update($request->all());
+
+        return response()->json($data, 200);
     }
 
-    public function destroy(WarungPkk $warung_pkk)
+    public function destroy(KejarPaket $kejar_paket)
     {
         if (!Gate::denies('staff')) {
             return response()->json('Access Denied', 500);
         }
-        $warung_pkk->delete();
+        $kejar_paket->delete();
         return response()->json(['message' => 'Record deleted']);
     }
 }

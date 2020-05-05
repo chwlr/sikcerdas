@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Model\Pkk\AnggotaPkk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class AnggotaPkkController extends Controller
 {
@@ -14,6 +15,9 @@ class AnggotaPkkController extends Controller
 
     public function store(Request $request)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $request->validate([
             'nama' => 'required',
             'jabatan' => 'required',
@@ -36,9 +40,21 @@ class AnggotaPkkController extends Controller
 
     public function update(Request $request, $id)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $AnggotaPkk = AnggotaPkk::find($id);
         $AnggotaPkk->update($request->all());
 
         return response()->json($AnggotaPkk, 200);
+    }
+
+    public function destroy(AnggotaPkk $anggota_pkk)
+    {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
+        $anggota_pkk->delete();
+        return response()->json(['message' => 'Record deleted']);
     }
 }

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Resources\TamanBacaanResource;
 use App\Model\Pkk\TamanBacaan;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
 
 class TamanBacaanController extends Controller
 {
@@ -20,6 +21,9 @@ class TamanBacaanController extends Controller
 
     public function store(Request $request)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $request->validate([
             'provinsi' => 'required',
             'kab_kota' => 'required',
@@ -37,12 +41,18 @@ class TamanBacaanController extends Controller
 
     public function update(Request $request, TamanBacaan $tamanBacaan)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $tamanBacaan->update($request->all());
         return response()->json(['data' => new TamanBacaanResource($tamanBacaan)], 200);
     }
 
     public function destroy(TamanBacaan $tamanBacaan)
     {
+        if (!Gate::denies('staff')) {
+            return response()->json('Access Denied', 500);
+        }
         $tamanBacaan->delete();
         return response()->json(['message' => 'Record deleted']);
     }
