@@ -65,7 +65,7 @@ class User extends Authenticatable implements JWTSubject
 
     public function hasRole($role)
     {
-        if ($this->roles()->where('role_id', $role)->first()) {
+        if ($this->roles()->where('jabatan', '=', $role)->first()) {
             return true;
         }
         return false;

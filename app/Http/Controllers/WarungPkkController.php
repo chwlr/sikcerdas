@@ -29,7 +29,7 @@ class WarungPkkController extends Controller
             'kab_kota' => 'required',
             'kecamatan' => 'required',
             'kelurahan' => 'required',
-            'nama_warung' => 'required|unique:mysql_pkk.posyandu',
+            'nama_warung' => 'required|unique:mysql_pkk.warung_pkk',
             'nama_pengelola' => 'required'
         ]);
 

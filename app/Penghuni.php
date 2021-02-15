@@ -6,8 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Penghuni extends Model
 {
-    protected $table = 'formsurveypenghunis';
-    protected $fillable = ['nik', 'nama', 'dluar_kk', 'j_kelamin', 'tgl_lahir', 'p_trakhir', 'agama', 'j_pekerjaan', 'b_pghasilan', 'prov_kk', 'kabkot_kk'];
+    protected $table = 'penghuni';
+    protected $primaryKey = 'id_penghuni';
+    protected $fillable = ['nik', 'nama', 'jenis_kelamin', 'tempat_lahir', 'nama_ibu', 'nama_ayah', 'gol_darah', 'agama', 'stts_nikah', 'shdk', 'pdkk_terakhir', 'pekerjaan', 'kelurahan', 'kode_lingkungan', 'no_kk', 'nama_kpl_klrg', 'alamat', 'tgl_lahir'];
 
     public function pemilik()
     {

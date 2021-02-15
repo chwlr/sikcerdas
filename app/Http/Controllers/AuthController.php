@@ -9,6 +9,7 @@ use Illuminate\Support\Facades\Validator;
 use JWTAuth;
 use Tymon\JWTAuth\Exceptions\JWTException;
 use Illuminate\Support\Facades\Gate;
+use App\Role;
 
 class AuthController extends Controller
 {
@@ -30,9 +31,14 @@ class AuthController extends Controller
 
     public function register(Request $request)
     {
-        if (Gate::denies('administrator')) {
+        if (Gate::denies('admin')) {
             return response()->json('Access Denied', 500);
         }
+
+        $adminRole = Role::where('jabatan', 'admin')->first();
+        $kpKelRole = Role::where('jabatan', 'kepala kelurahan')->first();
+        $stKelRole = Role::where('jabatan', 'staff kelurahan')->first();
+        $stPkkRole = Role::where('jabatan', 'staff pkk')->first();
 
         $validator = Validator::make($request->all(), [
             'nama' => 'required|string|max:255',
@@ -54,7 +60,19 @@ class AuthController extends Controller
             'password' => Hash::make($request->get('password'))
         ]);
 
-        $user->roles()->sync($request->jabatan);
+        if ($request->jabatan == 'admin') {
+            $user->roles()->attach($adminRole);
+        }
+        if ($request->jabatan == 'kepala kelurahan') {
+            $user->roles()->attach($kpKelRole);
+        }
+        if ($request->jabatan == 'staff kelurahan') {
+            $user->roles()->attach($stKelRole);
+        }
+        if ($request->jabatan == 'staff pkk') {
+            $user->roles()->attach($stPkkRole);
+        }
+
 
         $token = JWTAuth::fromUser($user);
 
@@ -86,8 +104,6 @@ class AuthController extends Controller
             return response()->json(['token_absent'], $e->getStatusCode());
         }
 
-        $token = JWTAuth::fromUser($user);
-
-        return response()->json(['user' => $user, 'token' => $token]);
+        return response()->json(['user' => $user]);
     }
 }

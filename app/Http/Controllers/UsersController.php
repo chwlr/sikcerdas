@@ -11,7 +11,7 @@ class UsersController extends Controller
 {
     public function index()
     {
-        if (Gate::denies('administrator')) {
+        if (Gate::denies('admin')) {
             return response()->json('Access Denied', 500);
         }
         $data = User::all();
@@ -27,19 +27,38 @@ class UsersController extends Controller
     public function update(Request $request, User $user)
     {
 
-        if (Gate::denies('administrator')) {
+        if (Gate::denies('admin')) {
             return response()->json('Access Denied', 500);
         }
 
-        $user->roles()->sync($request->jabatan);
+        $adminRole = Role::where('jabatan', 'admin')->first();
+        $kpKelRole = Role::where('jabatan', 'kepala kelurahan')->first();
+        $stKelRole = Role::where('jabatan', 'staff kelurahan')->first();
+        $stPkkRole = Role::where('jabatan', 'staff pkk')->first();
+
         $user->update($request->all());
+
+        if ($request->jabatan == 'admin') {
+            $user->roles()->attach($adminRole);
+        }
+        if ($request->jabatan == 'kepala kelurahan') {
+            $user->roles()->attach($kpKelRole);
+        }
+        if ($request->jabatan == 'staff kelurahan') {
+            $user->roles()->attach($stKelRole);
+        }
+        if ($request->jabatan == 'staff pkk') {
+            $user->roles()->attach($stPkkRole);
+        }
+
+
 
         return response()->json($user);
     }
 
     public function destroy(User $user)
     {
-        if (Gate::denies('administrator')) {
+        if (Gate::denies('admin')) {
             return response()->json('Access Denied', 500);
         }
 

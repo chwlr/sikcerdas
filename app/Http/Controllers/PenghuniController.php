@@ -2,72 +2,62 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PenghuniResource;
 use App\Pemilik;
 use App\Penghuni;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Gate;
+use Symfony\Component\HttpFoundation\Response;
+
 
 class PenghuniController extends Controller
 {
-    public function index($nop)
+    public function index(Pemilik $pemilik)
     {
-        if (!Gate::denies('staff_pkk')) {
-            return response()->json('Access Denied', 500);
+
+        if ($pemilik->exists()) {
+            return PenghuniResource::collection($pemilik->penghuni);
         }
 
-        $a =  Pemilik::where('nop', $nop)->first();
-        $data = Penghuni::where('formsurveys_id', $a->id)->get();
-        return response()->json(['data' => $data]);
+        return response()->json('Data tidak ditemukan');
     }
 
-    public function store(Request $request, $nop)
+    public function show(Pemilik $pemilik, Penghuni $penghuni)
     {
-        if (!Gate::denies('staff_pkk')) {
-            return response()->json('Access Denied', 500);
+        if ($penghuni->exists()) {
+            return response([
+                'data' => new PenghuniResource($penghuni)
+            ], Response::HTTP_OK);
         }
+        return response()->json('Data tidak ditemukan');
+    }
 
-        $pemilik =  Pemilik::where('nop', $nop)->first();
+    public function store(Request $request, Pemilik $pemilik)
+    {
 
         $request->validate([
-            'nik' => 'required|unique:formsurveypenghunis',
-            'dluar_kk' => 'required',
-            'nama' => 'required',
-            'j_kelamin' => 'required',
-            'tgl_lahir' => 'required',
-            'p_trakhir' => 'required',
-            'agama' => 'required',
-            'j_pekerjaan' => 'required',
-            'b_pghasilan' => 'required',
-            'prov_kk' => 'required',
-            'kabkot_kk' => 'required'
-
+            'nik' => 'required|unique:penghuni',
         ]);
+
+
         $data = new Penghuni($request->all());
         $pemilik->penghuni()->save($data);
-        return response()->json(['data' => $data], 201);
+
+        return response([
+            'data' => new PenghuniResource($data)
+        ], Response::HTTP_CREATED);
     }
 
-    public function update(Request $request, $nop, $penghuni)
+    public function update(Request $request, Pemilik $pemilik,  Penghuni $penghuni)
     {
-        if (!Gate::denies('staff_pkk')) {
-            return response()->json('Access Denied', 500);
-        }
-
-        $pemilik =  Pemilik::where('nop', $nop)->first();
-        Penghuni::where('formsurveys_id', $pemilik->id)->where('nik', $penghuni)->update($request->all());
-
-        //$data->update($request->all());
-        return response()->json(['message' => 'Update success']);
+        $penghuni->update($request->all());
+        return response([
+            'data' => new PenghuniResource($penghuni)
+        ], Response::HTTP_CREATED);
     }
 
-    public function destroy($nop, $penghuni)
+    public function destroy(Pemilik $pemilik, Penghuni $penghuni)
     {
-        if (!Gate::denies('staff_pkk') and !Gate::denies('staff')) {
-            return response()->json('Access Denied', 500);
-        }
-
-        $pemilik =  Pemilik::where('nop', $nop)->first();
-        Penghuni::where('formsurveys_id', $pemilik->id)->where('nik', $penghuni)->delete();
-        return response()->json('Data telah terhapus');
+        $penghuni->delete();
+        return response()->json('Data berhasil terhapus');
     }
 }

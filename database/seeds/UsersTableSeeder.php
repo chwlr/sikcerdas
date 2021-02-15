@@ -19,32 +19,41 @@ class UsersTableSeeder extends Seeder
         DB::table('role_user')->truncate();
 
         $adminRole = Role::where('jabatan', 'admin')->first();
-        $lurahRole = Role::where('jabatan', 'lurah')->first();
-        $staffRole = Role::where('jabatan', 'staff')->first();
+        $kpKelRole = Role::where('jabatan', 'kepala kelurahan')->first();
+        $stKelRole = Role::where('jabatan', 'staff kelurahan')->first();
+        $stPkkRole = Role::where('jabatan', 'staff pkk')->first();
 
         $admin = User::create([
-            'nama' => 'tole',
-            'email' => 'toletest@mail.com',
+            'nama' => 'admin user',
+            'email' => 'admin@mail.com',
             'jabatan' => 'admin',
-            'password' => Hash::make('qwe123qwe')
+            'password' => Hash::make('password')
         ]);
 
-        $lurah = User::create([
-            'nama' => 'anoa',
+        $kepLurah = User::create([
+            'nama' => 'kepala kelurahan',
             'email' => 'anoatest@mail.com',
-            'jabatan' => 'lurah',
-            'password' => Hash::make('qwe123qwe')
+            'jabatan' => 'kepala kelurahan',
+            'password' => Hash::make('password')
         ]);
 
-        $staff = User::create([
-            'nama' => 'inem',
-            'email' => 'inemtest@mail.com',
-            'jabatan' => 'staff',
-            'password' => Hash::make('qwe123qwe')
+        $stfLurah = User::create([
+            'nama' => 'staff_kelurahan',
+            'email' => 'staff_kelurahan@mail.com',
+            'jabatan' => 'staff kelurahan',
+            'password' => Hash::make('password')
+        ]);
+
+        $stfPkk = User::create([
+            'nama' => 'staff_pkk',
+            'email' => 'staff_pkk@mail.com',
+            'jabatan' => 'staff pkk',
+            'password' => Hash::make('password')
         ]);
 
         $admin->roles()->attach($adminRole);
-        $lurah->roles()->attach($lurahRole);
-        $staff->roles()->attach($staffRole);
+        $kepLurah->roles()->attach($kpKelRole);
+        $stfLurah->roles()->attach($stKelRole);
+        $stfPkk->roles()->attach($stPkkRole);
     }
 }
